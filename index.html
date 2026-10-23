@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Design brief · Connor Olson Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F2F2F0;--card:#FFFFFF;--ink:#1C1C1D;--text:#3A3A3D;--muted:#6B6B70;--line:rgba(28,28,29,.12);--chip:#EEEEEA;--accent:#1C1C1D;--on:#F5F5F3;--good:#22B573;--bad:#C83A42;
+  --disp:"Cormorant Garamond",Georgia,"Times New Roman",serif;--ui:"Space Grotesk",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;--soft:0 1px 2px rgba(20,20,21,.04),0 10px 30px rgba(20,20,21,.06)}
+@media (prefers-color-scheme:dark){:root{--bg:#151516;--card:#222224;--ink:#F3F3F0;--text:#D9D9D5;--muted:#9D9DA2;--line:rgba(245,245,243,.12);--chip:#2E2E31;--accent:#F3F3F0;--on:#1C1C1D;--soft:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.25)}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.55 var(--ui);-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:28px 16px calc(120px + env(safe-area-inset-bottom))}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:40px}
+.sig{width:132px;height:auto;color:var(--ink);display:block}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--disp);font-style:italic;font-weight:600;font-size:clamp(40px,9vw,60px);line-height:1;letter-spacing:-.02em;color:var(--ink);margin:6px 0 16px}
+.lede{font-size:17px;color:var(--text);margin:0 0 6px;white-space:pre-line}
+.proj{margin:18px 0 0;display:flex;gap:10px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--card);box-shadow:var(--soft);border-radius:999px;padding:8px 14px;font-size:13px;color:var(--ink)}
+.bar{position:sticky;top:0;z-index:5;margin:28px -16px 18px;padding:12px 16px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:center;gap:12px}
+.track{flex:1;height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.track i{display:block;height:100%;width:0;background:var(--ink);border-radius:99px;transition:width .35s cubic-bezier(.2,.8,.2,1)}
+.count{font-size:12px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.card{background:var(--card);border-radius:22px;box-shadow:var(--soft);padding:22px 20px;margin-bottom:14px}
+.card.mood{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:space-between}
+.q{scroll-margin-top:80px}
+.qn{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;gap:8px;align-items:center}
+.qn .ok{width:16px;height:16px;border-radius:50%;background:var(--good);color:#fff;display:none;place-items:center;font-size:10px}
+.q.done .qn .ok{display:grid}
+label.ql,.ql{display:block;font-family:var(--disp);font-style:italic;font-weight:600;font-size:24px;line-height:1.15;color:var(--ink);margin:0 0 4px}
+.hint{font-size:13.5px;color:var(--muted);margin:0 0 12px}
+input[type=text],input[type=url],input[type=date],textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--chip);border:1.5px solid transparent;border-radius:14px;padding:13px 14px;outline:none;transition:border-color .15s,background .15s;-webkit-appearance:none;appearance:none}
+input:focus,textarea:focus{border-color:var(--ink);background:var(--card)}
+textarea{resize:vertical;min-height:110px;line-height:1.5}
+input[type=date]{min-height:50px}
+.checks{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chk{position:relative}
+.chk input{position:absolute;opacity:0;pointer-events:none}
+.chk span{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:var(--chip);font-size:14px;color:var(--ink);cursor:pointer;user-select:none;transition:background .15s,color .15s,transform .1s}
+.chk span::before{content:"";width:14px;height:14px;border-radius:4px;border:1.5px solid currentColor;opacity:.5}
+.chk input:checked+span{background:var(--accent);color:var(--on)}
+.chk input:checked+span::before{opacity:1;background:currentColor;box-shadow:inset 0 0 0 2px var(--accent)}
+.chk input:focus-visible+span{outline:2px solid var(--ink);outline-offset:2px}
+.chk span:active{transform:scale(.97)}
+.scale{display:grid;grid-template-columns:minmax(70px,1fr) auto minmax(70px,1fr);align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.scale:first-of-type{border-top:0}
+.scale .l{font-size:14px;color:var(--text)}
+.scale .r{font-size:14px;color:var(--text);text-align:right}
+.dots{display:flex;gap:6px}
+.dots button{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);background:transparent;cursor:pointer;padding:0;transition:transform .12s,background .15s,border-color .15s}
+.dots button:hover{border-color:var(--ink)}
+.dots button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);transform:scale(1.08)}
+.dots button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+@media (max-width:420px){.scale{grid-template-columns:1fr 1fr;row-gap:8px}.scale .dots{grid-column:1/-1;grid-row:2;justify-content:space-between}.dots button{width:36px;height:36px}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:999px;background:var(--accent);color:var(--on);font:500 13px/1 var(--ui);letter-spacing:.1em;text-transform:uppercase;padding:16px 26px;cursor:pointer;text-decoration:none;transition:transform .12s,opacity .15s}
+.btn:active{transform:scale(.98)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn[disabled]{opacity:.5;cursor:default}
+.send{margin-top:26px;text-align:center}
+.send .btn{width:min(100%,360px);padding:20px}
+.send p{font-size:13px;color:var(--muted);margin:12px 0 0}
+.note{font-size:13px;color:var(--muted)}
+.saved{font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.saved i{width:6px;height:6px;border-radius:50%;background:var(--good)}
+.screen{min-height:60vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:12px}
+.screen h1{margin-bottom:6px}
+.err{background:color-mix(in srgb,var(--bad) 10%,var(--card));border-radius:18px;padding:18px;margin-top:18px;color:var(--ink)}
+.err b{display:block;margin-bottom:6px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.fade{animation:fd .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes fd{from{opacity:0;transform:translateY(10px)}}
+.foot{margin-top:56px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.foot a{color:inherit}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sig" viewBox="0 0 1402 344"><path fill-rule="evenodd" fill="currentColor" d="M148 342L144 342 140 343 127 342 116 342.5 113 342 109 342.5 102 341.5 81 338.5 74 335.5 67 334 63 332 59 331.5 51 327 46 325 29 313.5 22 307 10 291 3.5 275 2 265.5 0 261 0.5 243 2 240 3 234 8.5 214 11 209 14.5 200 23 185.5 33.5 172 37 166 61 142 88 120.5 92 119 107 108.5 120 102 131 95.5 135 94 138.5 92 142 91 147 88 151 86.5 160 81.5 164 81 170 77.5 177 75.5 183.5 72 187 71 190 69.5 195 68 200 65.5 210 62.5 221 58 230 55.5 238 51.5 247 49.5 260 44.5 283 38.5 288 36 294 35 299 33 310 30 316 28 322 27 332 24.5 337 22.5 349 20.5 353 18.5 360 18 368 15.5 388 12 393 10.5 405 9.5 415 7 422 7 427 5.5 437 4.5 440 3.5 448 3.5 466 0.5 470 0 474 0.5 478 0.5 497 5 501 6.5 507 10.5 509.5 13 513 18 517.5 31 517.5 33 515 38.5 509 42.5 505 43 502 42.5 499 41 495 33 490.5 27 488 25.5 485 24.5 470 23.5 466 22.5 453 22.5 420 26.5 411 29 405 29.5 398 31.5 389 33 383 33.5 372 36.5 368 37 348 42.5 342 43 335 45.5 327 47 313 51.5 296 55.5 286 59.5 282 60 272 64 262 66.5 252 71 248 72 242 74.5 229 78.5 222 82 216 83.5 212 86.5 204 89 193 93.5 188 96.5 183 98 180 99.5 171 103 163 107.5 158 109 154 111.5 142 116.5 130 124 126 125.5 118 130 114 133 99 142 94 146.5 83 153.5 80 157 76.5 159 55.5 179 47.5 189 37 204 32 214 31.5 217 29 222 27.5 228 24.5 235 22.5 248 22 258 23 265 25 273 30 283 38 293 43 298 56 306.5 68 312 95 319 110 320.5 131 321 137 319.5 150 319 156 318 160 318 168 316.5 186 315.5 192 314 209 312 217 309.5 227 308 232 306.5 249 303.5 258 300.5 262 300.5 266 299 280 295.5 299 289.5 306 286.5 316 284 323 280.5 326 280 330 278 346 272.5 352 269 362 265.5 366 263 382 256.5 388 252.5 398 248 401 246 431 235.5 434 235.5 444 236.5 454 236.5 458 235.5 461 234 465 233 471 231 478 229.5 496 226.5 507 226.5 512 228 514.5 230 516 233 518 242 531 238 544 232.5 555 229 561 226 581 219 586 216.5 591 215.5 601 210.5 607 209.5 611 210.5 614 212.5 616.5 216 617.5 219 617 224 610.5 244 611 245.5 619 244 623 242 632 239.5 640 236 646 234.5 649 233 656 232 659 233 663 236 666 245 667 245.5 684 240 689 237.5 695 236.5 710 231 732 224 737 222 742 221 760 214.5 764 214.5 768 214.5 773 218 775 220 776 223 775.5 228 774 231 769 238 765 246 765 247 766 247.5 780 241.5 796 233 808 228.5 817 226.5 830 226.5 834 228 840 230.5 851 238.5 857 246 859 248 861 248.5 882 240.5 894 237 906 234 914 231.5 926 230.5 940 228 944 228 948 227.5 951 228 957 227.5 969 227.5 983 228 993 230.5 1002 234.5 1006 235.5 1012 238 1016 239 1019 241 1031 245 1041 249.5 1046 250.5 1049 252.5 1056 253 1063 252.5 1070 251 1080 246.5 1099 239.5 1109 234.5 1118 231.5 1128 226.5 1133 225 1148 219 1166 213 1174 210 1181 208 1191 204.5 1197 203.5 1204 200.5 1216 198 1223 195.5 1231 194.5 1236 192.5 1251 190 1256 188.5 1261 188 1264 187 1271 186.5 1278 184.5 1285 184 1292 182.5 1296 182.5 1299 181.5 1324 179 1331 177.5 1342 177.5 1346 176.5 1353 176.5 1363 175 1367 175 1382 172.5 1392 172.5 1396 173.5 1399 176 1401 183 1401 186 1399.5 189 1396 192 1392 194 1372 195.5 1367 196.5 1361 196 1346 197.5 1340 197.5 1293 203.5 1281 206.5 1272 207.5 1261 210.5 1247 213 1243 214.5 1236 215.5 1223 219 1219 220.5 1212 222 1205 224.5 1201 225 1160 238 1143 244 1136 247.5 1130 248.5 1111 257.5 1107 258.5 1104 260.5 1083 270.5 1078 272 1069.5 276 1065 279 1059 281 1056 281.5 1049 279.5 1039 275 1025 268 1020 266.5 1017 264.5 997 256 993 254.5 989 256 987.5 258 982 262 979 265.5 975 268 964 272.5 956 273 946 270.5 940 267.5 931 261.5 928.5 258 924.5 254 921 253 913 255 907 256 890 261 872 267.5 866 271.5 860 273.5 857 275.5 854 276.5 850 276.5 846 275 839 265 830 259 819 254.5 808 254 797 256.5 778 267.5 765 272.5 748 276 738 275.5 734 274 731 271 729.5 268 729.5 263 729.5 261 733 255 738.5 247 739.5 245 739 244 735 244.5 720 249.5 706 255.5 696 258.5 689 262.5 684 263.5 679 266 670 269 661 273 657 274 653 275.5 647 275 643.5 273 640.5 267 639.5 261 638 260 618 266.5 615 268 609 269.5 602 273 595 275 592 276.5 583 277.5 580 276 575.5 272 574.5 269 574.5 266 576 261 587 242 586 240.5 570 246 558 251.5 550 253.5 528 262.5 515 266.5 502 272 494 274 490 273 484.5 269 481.5 262 481 255 480.5 252 478 251.5 474 253 472 257 473 264 472.5 276 471.5 279 468 286 463.5 291 459 294.5 447 298 437 298.5 426 298 410 295.5 402 292.5 400.5 291 398.5 288 397.5 284 398 281 403.5 272 404 271 403 270.5 397 273.5 394 274 391 276.5 385 279 381 280.5 367.5 287 356 291 348 295 330 301 319 305.5 314 306.5 309 309 296 313.5 286 316 282 316.5 272 320 267 321 256 324.5 248 325.5 244 327.5 234 328.5 210 334.5 203 334.5 193 337 185 337.5 179 339.5 173 339.5 168 340.5 148 342Z"/></symbol></svg>
+<main class="wrap" id="app" aria-live="polite">
+  <div class="top"><svg class="sig" viewBox="0 0 1402 344" role="img" aria-label="Connor Olson Design"><use href="#sig"/></svg><span class="eyebrow">Design brief</span></div>
+  <div class="screen"><span class="spin" style="color:var(--muted)"></span></div>
+</main>
+<script>
+(function(){
+"use strict";
+var app=document.getElementById("app");
+var B=null, A={}, KEY="", sending=false, tries=0;
+var ENDPOINT_OK=/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/;
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function top(){return '<div class="top"><svg class="sig" viewBox="0 0 1402 344" role="img" aria-label="Connor Olson Design"><use href="#sig"/></svg><span class="eyebrow">Design brief</span></div>'}
+function b64d(s){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";var bin=atob(s),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u}
+async function decode(h){
+  if(!h)throw new Error("empty");
+  var kind=h.slice(0,2),body=h.slice(2),bytes=b64d(body),txt;
+  if(kind==="z."){if(typeof DecompressionStream==="undefined")throw new Error("old browser");var st=new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw"));txt=await new Response(st).text()}
+  else if(kind==="j."){txt=new TextDecoder().decode(bytes)}else throw new Error("bad link");
+  return JSON.parse(txt);
+}
+function first(n){return String(n||"").trim().split(/\s+/)[0]||""}
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){return null}}
+function save(extra){try{localStorage.setItem(KEY,JSON.stringify(Object.assign({a:A,t:Date.now()},extra||{})))}catch(e){}flashSaved()}
+var svT;function flashSaved(){var el=document.getElementById("svd");if(!el)return;el.hidden=false;clearTimeout(svT);svT=setTimeout(function(){el.hidden=true},1600)}
+function answered(q){var v=A[q.i];if(q.t==="checks")return Array.isArray(v)&&v.length>0;if(q.t==="scales")return Array.isArray(v)&&v.some(function(x){return x});return v!=null&&String(v).trim()!==""}
+function progress(){var n=B.q.filter(answered).length,t=B.q.length;var bar=document.querySelector(".track i");if(bar)bar.style.width=(t?n/t*100:0)+"%";var c=document.getElementById("cnt");if(c)c.textContent=n+" of "+t+" answered";
+  B.q.forEach(function(q){var el=document.getElementById("q-"+q.i);if(el)el.classList.toggle("done",answered(q))})}
+function field(q,k){
+  var id="f-"+q.i,v=A[q.i],h=q.h?'<p class="hint">'+esc(q.h)+'</p>':"",head='<div class="qn">'+(k+1)+' of '+B.q.length+'<span class="ok" aria-hidden="true">&#10003;</span></div>';
+  if(q.t==="short"||q.t==="url")return '<section class="card q fade" id="q-'+q.i+'" style="animation-delay:'+Math.min(k*40,400)+'ms">'+head+'<label class="ql" for="'+id+'">'+esc(q.l)+'</label>'+h+'<input type="'+(q.t==="url"?"url":"text")+'" id="'+id+'" data-i="'+q.i+'" value="'+esc(v||"")+'" autocomplete="off" '+(q.t==="url"?'inputmode="url" placeholder="https://"':'')+'></section>';
+  if(q.t==="date")return '<section class="card q fade" id="q-'+q.i+'">'+head+'<label class="ql" for="'+id+'">'+esc(q.l)+'</label>'+h+'<input type="date" id="'+id+'" data-i="'+q.i+'" value="'+esc(v||"")+'"></section>';
+  if(q.t==="long")return '<section class="card q fade" id="q-'+q.i+'">'+head+'<label class="ql" for="'+id+'">'+esc(q.l)+'</label>'+h+'<textarea id="'+id+'" data-i="'+q.i+'" rows="'+(q.r||4)+'">'+esc(v||"")+'</textarea></section>';
+  if(q.t==="checks"){var sel=Array.isArray(v)?v:[];return '<section class="card q fade" id="q-'+q.i+'" role="group" aria-labelledby="l-'+q.i+'">'+head+'<span class="ql" id="l-'+q.i+'">'+esc(q.l)+'</span>'+(q.h?h:'<p class="hint">Choose all that apply.</p>')+'<div class="checks">'+(q.o||[]).map(function(o,j){return '<label class="chk"><input type="checkbox" data-i="'+q.i+'" data-j="'+j+'" '+(sel.indexOf(j)>=0?"checked":"")+'><span>'+esc(o)+'</span></label>'}).join("")+'</div></section>'}
+  if(q.t==="scales"){var cur=Array.isArray(v)?v:[];return '<section class="card q fade" id="q-'+q.i+'" role="group" aria-labelledby="l-'+q.i+'">'+head+'<span class="ql" id="l-'+q.i+'">'+esc(q.l)+'</span><p class="hint">'+esc(q.h||"For each pair, tap the dot closest to how your project should feel.")+'</p>'+(q.r||[]).map(function(r,ri){return '<div class="scale"><span class="l">'+esc(r[0])+'</span><span class="dots" role="radiogroup" aria-label="'+esc(r[0])+' to '+esc(r[1])+'">'+[1,2,3,4,5].map(function(n){return '<button type="button" role="radio" aria-checked="'+(cur[ri]===n)+'" aria-pressed="'+(cur[ri]===n)+'" aria-label="'+n+' of 5" data-i="'+q.i+'" data-r="'+ri+'" data-v="'+n+'"></button>'}).join("")+'</span><span class="r">'+esc(r[1])+'</span></div>'}).join("")+'</section>'}
+  return "";
+}
+function plain(){return B.q.map(function(q){var v=A[q.i],t="";if(q.t==="checks")t=(Array.isArray(v)?v:[]).map(function(j){return (q.o||[])[j]}).filter(Boolean).join(", ");else if(q.t==="scales")t=(q.r||[]).map(function(r,ri){var x=(Array.isArray(v)?v:[])[ri];return x?r[0]+" ↔ "+r[1]+": "+x+"/5":""}).filter(Boolean).join("; ");else t=v||"";return q.l+"\n"+(t||"(blank)")}).join("\n\n")}
+function render(){
+  var st=load()||{};A=st.a||{};
+  var nm=first(B.c),done=!!st.sent;
+  app.innerHTML=top()+
+   '<div class="fade"><span class="eyebrow">'+esc(B.p||"Your project")+'</span><h1>'+(nm?"Hi "+esc(nm)+".":"Hi there.")+'</h1><p class="lede">'+esc(B.n||"Thanks for working with me. These questions help me understand your project before I start designing. Answer what you can. Nothing here is a test, and short answers are completely fine.")+'</p>'+
+   '<div class="proj"><span class="pill">'+B.q.length+' questions</span><span class="pill">About '+Math.max(3,Math.round(B.q.length*0.8))+' minutes</span><span class="pill">Saves as you go</span></div></div>'+
+   (done?'<div class="err" style="background:color-mix(in srgb,var(--good) 12%,var(--card))"><b>You already sent this brief. Thank you!</b>You can change anything below and send it again. Connor will get the updated answers.</div>':"")+
+   '<div class="bar"><div class="track" aria-hidden="true"><i></i></div><span class="count" id="cnt"></span><span class="saved" id="svd" hidden><i></i>Saved</span></div>'+
+   (B.m?'<section class="card mood fade"><div><span class="qn">Moodboard</span><span class="ql">Add some inspiration</span><p class="hint" style="margin:0">Pin images, colors and anything that feels right.</p></div><a class="btn ghost" href="'+esc(B.m)+'" target="_blank" rel="noopener">Open moodboard</a></section>':"")+
+   B.q.map(field).join("")+
+   '<div class="send"><button class="btn" id="send" type="button">Send to Connor</button><p id="sendnote">Your answers go straight to Connor. You can come back and update them anytime with this same link.</p><div id="sendmsg"></div></div>'+
+   '<div class="foot"><span>Connor Olson Design · Spokane, WA</span>'+(B.e?'<a href="mailto:'+esc(B.e)+'">'+esc(B.e)+'</a>':"")+'</div>';
+  progress();
+}
+function thanks(){
+  var nm=first(B.c);window.scrollTo({top:0,behavior:"smooth"});
+  app.innerHTML=top()+'<div class="screen fade"><span class="eyebrow">Brief received</span><h1>Thank you'+(nm?", "+esc(nm):"")+'!</h1><p class="lede">Connor has your answers and will be in touch soon about next steps. If you think of anything else, open this same link again to update your brief.</p><div class="row"><button class="btn ghost" id="again" type="button">Review my answers</button></div></div>';
+}
+async function send(){
+  if(sending)return;var btn=document.getElementById("send"),msg=document.getElementById("sendmsg");
+  var n=B.q.filter(answered).length;
+  if(n===0){msg.innerHTML='<div class="err"><b>Nothing to send yet</b>Answer at least one question, then send.</div>';return}
+  sending=true;btn.disabled=true;btn.innerHTML='<span class="spin"></span>Sending';msg.innerHTML="";
+  var payload={v:1,id:B.id,k:B.k,client:B.c||"",project:B.p||"",answers:A,text:plain(),sentAt:new Date().toISOString()};
+  var ok=false,last="";
+  for(tries=0;tries<3&&!ok;tries++){
+    try{
+      var ctl=new AbortController(),tm=setTimeout(function(){ctl.abort()},20000);
+      var r=await fetch(B.u,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),signal:ctl.signal,redirect:"follow"});
+      clearTimeout(tm);var j=await r.json().catch(function(){return null});
+      if(j&&j.ok){ok=true;break}last=(j&&j.error)||("status "+r.status);
+    }catch(e){last=e&&e.name==="AbortError"?"timed out":"network"}
+    await new Promise(function(res){setTimeout(res,1200*(tries+1))});
+  }
+  sending=false;
+  if(ok){save({sent:Date.now()});thanks();return}
+  btn.disabled=false;btn.textContent="Try again";
+  var body="Hi Connor,\n\nThe brief form wouldn't send, so here are my answers for "+(B.p||"my project")+":\n\n"+plain()+"\n\n(brief "+B.id+")";
+  msg.innerHTML='<div class="err"><b>That didn’t go through, but nothing is lost.</b>Your answers are saved on this device. Try again in a moment, or send them by email instead:<div class="row">'+(B.e?'<a class="btn" href="mailto:'+esc(B.e)+'?subject='+encodeURIComponent("Design brief: "+(B.p||B.c||""))+'&body='+encodeURIComponent(body)+'">Email my answers</a>':"")+'<button class="btn ghost" id="copyans" type="button">Copy my answers</button></div></div>';
+  var cp=document.getElementById("copyans");if(cp)cp.onclick=function(){navigator.clipboard&&navigator.clipboard.writeText(body).then(function(){cp.textContent="Copied"})};
+}
+document.addEventListener("input",function(e){var t=e.target;if(!B||!t.dataset||!t.dataset.i||t.type==="checkbox")return;A[t.dataset.i]=t.value;save();progress()});
+document.addEventListener("change",function(e){var t=e.target;if(!B||!t.dataset||!t.dataset.i)return;
+  if(t.type==="checkbox"){var i=t.dataset.i,j=Number(t.dataset.j),cur=Array.isArray(A[i])?A[i].slice():[];var p=cur.indexOf(j);if(t.checked&&p<0)cur.push(j);if(!t.checked&&p>=0)cur.splice(p,1);cur.sort(function(a,b){return a-b});A[i]=cur}
+  else A[t.dataset.i]=t.value;save();progress()});
+document.addEventListener("click",function(e){var t=e.target.closest&&e.target.closest("button");if(!t||!B)return;
+  if(t.id==="send"){send();return}
+  if(t.id==="again"){render();return}
+  if(t.dataset&&t.dataset.r!=null){var i=t.dataset.i,ri=Number(t.dataset.r),v=Number(t.dataset.v),cur=Array.isArray(A[i])?A[i].slice():[];cur[ri]=cur[ri]===v?0:v;A[i]=cur;
+    t.parentNode.querySelectorAll("button").forEach(function(b){var on=Number(b.dataset.v)===cur[ri];b.setAttribute("aria-pressed",on);b.setAttribute("aria-checked",on)});save();progress()}});
+(async function(){
+  try{
+    var raw=decodeURIComponent((location.hash||"").slice(1));B=await decode(raw);
+    if(!B||!B.id||!Array.isArray(B.q))throw new Error("bad");
+    if(!ENDPOINT_OK.test(B.u||""))throw new Error("endpoint");
+    KEY="cod.brief."+B.id;document.title=(B.p?B.p+" · ":"")+"Design brief · Connor Olson Design";render();
+  }catch(e){
+    app.innerHTML=top()+'<div class="screen fade"><span class="eyebrow">Link problem</span><h1>This link looks incomplete.</h1><p class="lede">Some of it may have been cut off when it was copied. Please open the link straight from Connor’s email or message, or reply and ask him to send it again.</p><a class="btn ghost" href="mailto:hey@connorolsondesign.com">Email Connor</a></div>';
+  }
+})();
+})();
+</script>
+</body>
+</html>
