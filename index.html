@@ -122,69 +122,84 @@ function first(n){return String(n||"").trim().split(/\s+/)[0]||""}
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){return null}}
 function save(extra){try{localStorage.setItem(KEY,JSON.stringify(Object.assign({a:A,t:Date.now()},extra||{})))}catch(e){}flashSaved()}
 var svT;function flashSaved(){var el=document.getElementById("svd");if(!el)return;el.hidden=false;clearTimeout(svT);svT=setTimeout(function(){el.hidden=true},1600)}
-function answered(q){var v=A[q.i];if(q.i==="x_files"&&(A.x_files__up||[]).length)return true;if(q.t==="checks")return Array.isArray(v)&&v.length>0;if(q.t==="scales")return Array.isArray(v)&&v.some(function(x){return x});return v!=null&&String(v).trim()!==""}
-function progress(){var n=B.q.filter(answered).length,t=B.q.length;var bar=document.querySelector(".track i");if(bar)bar.style.width=(t?n/t*100:0)+"%";var c=document.getElementById("cnt");if(c)c.textContent=n+" of "+t+" answered";
-  B.q.forEach(function(q){var el=document.getElementById("q-"+q.i);if(el)el.classList.toggle("done",answered(q))})}
+function isUp(q){return q.t==="upload"||q.i==="x_files"}
+function ups(q){return A[q.i+"__up"]||[]}
+function onlyImg(q){return q.t==="upload"&&q.a==="images"}
+function maxN(q){return q.t==="upload"?Math.max(1,Math.min(25,Number(q.x)||10)):12}
+function QS(){return B.q.filter(function(q){return q.t!=="mood"})}
+function okUrl(u){return /^https?:\/\//i.test(String(u||""))?String(u):""}
+function answered(q){var v=A[q.i];if(isUp(q)&&ups(q).length)return true;if(q.t==="checks")return Array.isArray(v)&&v.length>0;if(q.t==="scales")return Array.isArray(v)&&v.some(function(x){return x});return v!=null&&String(v).trim()!==""}
+function progress(){var n=QS().filter(answered).length,t=QS().length;var bar=document.querySelector(".track i");if(bar)bar.style.width=(t?n/t*100:0)+"%";var c=document.getElementById("cnt");if(c)c.textContent=n+" of "+t+" answered";
+  QS().forEach(function(q){var el=document.getElementById("q-"+q.i);if(el)el.classList.toggle("done",answered(q))})}
 function field(q,k){
-  var id="f-"+q.i,v=A[q.i],h=q.h?'<p class="hint">'+esc(q.h)+'</p>':"",head='<div class="qn">'+(k+1)+' of '+B.q.length+'<span class="ok" aria-hidden="true">&#10003;</span></div>';
+  var id="f-"+q.i,v=A[q.i],h=q.h?'<p class="hint">'+esc(q.h)+'</p>':"",head='<div class="qn">'+(k+1)+' of '+QS().length+'<span class="ok" aria-hidden="true">&#10003;</span></div>';
+  if(q.t==="mood"){var mu=okUrl(q.u||B.m);if(!mu)return "";return '<section class="card mood fade" id="q-'+q.i+'"><div><span class="qn">Moodboard</span><span class="ql">'+esc(q.l||"Add some inspiration")+'</span><p class="hint" style="margin:0">'+esc(q.h||"Pin images, colors and anything that feels right.")+'</p></div><a class="btn ghost" href="'+esc(mu)+'" target="_blank" rel="noopener">Open moodboard</a></section>'}
   if(q.t==="short"||q.t==="url")return '<section class="card q fade" id="q-'+q.i+'" style="animation-delay:'+Math.min(k*40,400)+'ms">'+head+'<label class="ql" for="'+id+'">'+esc(q.l)+'</label>'+h+'<input type="'+(q.t==="url"?"url":"text")+'" id="'+id+'" data-i="'+q.i+'" value="'+esc(v||"")+'" autocomplete="off" '+(q.t==="url"?'inputmode="url" placeholder="https://"':'')+'></section>';
   if(q.t==="date")return '<section class="card q fade" id="q-'+q.i+'">'+head+'<label class="ql" for="'+id+'">'+esc(q.l)+'</label>'+h+'<input type="date" id="'+id+'" data-i="'+q.i+'" value="'+esc(v||"")+'"></section>';
-  if(q.i==="x_files")return '<section class="card q fade" id="q-'+q.i+'">'+head+'<span class="ql">'+esc(q.l)+'</span><p class="hint">Drop logos, photos or documents here, or paste a Google Drive, Dropbox or WeTransfer link below.</p><label class="drop" id="drop"><input type="file" id="filepick" multiple hidden><span class="dic" aria-hidden="true">&#8593;</span><b>Drag files here</b><small>or tap to choose · up to 10 MB each</small></label><ul class="files" id="files">'+filesHTML()+'</ul><label class="sub" for="'+id+'">Or paste links</label><textarea id="'+id+'" data-i="'+q.i+'" rows="2" placeholder="https://drive.google.com/…">'+esc(v||"")+'</textarea></section>';
+  if(isUp(q)){var img=onlyImg(q),mx=maxN(q),uh=q.i==="x_files"?"Drop logos, photos or documents here, or paste a Google Drive, Dropbox or WeTransfer link below.":(q.h||(img?"Add photos here, or paste a link below.":"Add files here, or paste a link below."));
+    return '<section class="card q fade" id="q-'+q.i+'">'+head+'<span class="ql">'+esc(q.l)+'</span><p class="hint">'+esc(uh)+'</p><label class="drop" data-drop="'+q.i+'"><input type="file" data-pick="'+q.i+'" multiple hidden'+(img?' accept="image/*,.heic,.heif"':'')+'><span class="dic" aria-hidden="true">&#8593;</span><b>'+(img?"Drag photos here":"Drag files here")+'</b><small>or tap to choose · '+(q.t==="upload"?"up to "+mx+" "+(img?(mx===1?"photo":"photos"):(mx===1?"file":"files"))+", ":"")+'10 MB each</small></label><ul class="files" id="files-'+q.i+'">'+filesHTML(q)+'</ul><label class="sub" for="'+id+'">Or paste links</label><textarea id="'+id+'" data-i="'+q.i+'" rows="2" placeholder="https://drive.google.com/…">'+esc(v||"")+'</textarea></section>'}
   if(q.t==="long")return '<section class="card q fade" id="q-'+q.i+'">'+head+'<label class="ql" for="'+id+'">'+esc(q.l)+'</label>'+h+'<textarea id="'+id+'" data-i="'+q.i+'" rows="'+(q.r||4)+'">'+esc(v||"")+'</textarea></section>';
   if(q.t==="checks"){var sel=Array.isArray(v)?v:[];return '<section class="card q fade" id="q-'+q.i+'" role="group" aria-labelledby="l-'+q.i+'">'+head+'<span class="ql" id="l-'+q.i+'">'+esc(q.l)+'</span>'+(q.h?h:'<p class="hint">Choose all that apply.</p>')+'<div class="checks">'+(q.o||[]).map(function(o,j){return '<label class="chk"><input type="checkbox" data-i="'+q.i+'" data-j="'+j+'" '+(sel.indexOf(j)>=0?"checked":"")+'><span>'+esc(o)+'</span></label>'}).join("")+'</div>'+(otherIdx(q)>=0?'<div class="other" '+(sel.indexOf(otherIdx(q))>=0?"":"hidden")+'><input type="text" id="f-'+q.i+'_other" data-i="'+q.i+'_other" value="'+esc(A[q.i+"_other"]||"")+'" placeholder="Other (optional): tell me more" aria-label="Other, please describe"></div>':"")+'</section>'}
   if(q.t==="scales"){var cur=Array.isArray(v)?v:[];return '<section class="card q fade" id="q-'+q.i+'" role="group" aria-labelledby="l-'+q.i+'">'+head+'<span class="ql" id="l-'+q.i+'">'+esc(q.l)+'</span><p class="hint">'+esc(q.h||"For each pair, tap the dot closest to how your project should feel.")+'</p>'+(q.r||[]).map(function(r,ri){return '<div class="scale"><span class="l">'+esc(r[0])+'</span><span class="dots" role="radiogroup" aria-label="'+esc(r[0])+' to '+esc(r[1])+'">'+[1,2,3,4,5].map(function(n){return '<button type="button" role="radio" aria-checked="'+(cur[ri]===n)+'" aria-pressed="'+(cur[ri]===n)+'" aria-label="'+n+' of 5" data-i="'+q.i+'" data-r="'+ri+'" data-v="'+n+'"></button>'}).join("")+'</span><span class="r">'+esc(r[1])+'</span></div>'}).join("")+'</section>'}
   return "";
 }
 function otherIdx(q){var o=q.o||[];for(var j=0;j<o.length;j++)if(/^other\b/i.test(String(o[j]).trim()))return j;return -1}
-var UP={};var MAXF=10*1024*1024,MAXN=12;
-function filesHTML(){var done=(A.x_files__up||[]).map(function(f,k){return '<li class="f ok"><span class="fn">'+esc(f.n)+'</span><span class="fs">Uploaded</span><button type="button" class="fx" data-rmf="'+k+'" aria-label="Remove '+esc(f.n)+'">&times;</button></li>'}).join("");
-  var going=Object.keys(UP).map(function(k){var u=UP[k];return '<li class="f '+(u.err?"bad":"")+'"><span class="fn">'+esc(u.n)+'</span><span class="fs">'+(u.err?esc(u.err):'<span class="spin"></span>Uploading')+'</span>'+(u.err?'<button type="button" class="fx" data-rmu="'+k+'" aria-label="Dismiss">&times;</button>':"")+'</li>'}).join("");return done+going}
-function paintFiles(){var el=document.getElementById("files");if(el)el.innerHTML=filesHTML();progress()}
+var UP={};var MAXF=10*1024*1024;
+function filesHTML(q){var done=ups(q).map(function(f,k){return '<li class="f ok"><span class="fn">'+esc(f.n)+'</span><span class="fs">Uploaded</span><button type="button" class="fx" data-q="'+q.i+'" data-rmf="'+k+'" aria-label="Remove '+esc(f.n)+'">&times;</button></li>'}).join("");
+  var going=Object.keys(UP).filter(function(k){return UP[k].q===q.i}).map(function(k){var u=UP[k];return '<li class="f '+(u.err?"bad":"")+'"><span class="fn">'+esc(u.n)+'</span><span class="fs">'+(u.err?esc(u.err):'<span class="spin"></span>Uploading')+'</span>'+(u.err?'<button type="button" class="fx" data-rmu="'+k+'" aria-label="Dismiss">&times;</button>':"")+'</li>'}).join("");return done+going}
+function paintFiles(q){var el=document.getElementById("files-"+q.i);if(el)el.innerHTML=filesHTML(q);progress()}
+function isImg(f){return /^image\//.test(f.type||"")||/\.(heic|heif|jpe?g|png|gif|webp|avif|tiff?)$/i.test(f.name||"")}
 function b64(buf){var u=new Uint8Array(buf),s="",i;for(i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)}
-async function upload(file){
-  var key="u"+Date.now()+Math.random().toString(36).slice(2,6);UP[key]={n:file.name};paintFiles();
-  if(file.size>MAXF){UP[key].err="Over 10 MB. Share a link instead.";paintFiles();return}
-  if((A.x_files__up||[]).length+Object.keys(UP).length>MAXN){UP[key].err="That's a lot of files. Share a folder link instead.";paintFiles();return}
+async function upload(file,q){
+  var key="u"+Date.now()+Math.random().toString(36).slice(2,6);UP[key]={n:file.name,q:q.i};paintFiles(q);
+  if(onlyImg(q)&&!isImg(file)){UP[key].err="This one takes photos only (JPG, PNG, HEIC and so on).";paintFiles(q);return}
+  if(file.size>MAXF){UP[key].err="Over 10 MB. Share a link instead.";paintFiles(q);return}
+  var busy=Object.keys(UP).filter(function(k){return UP[k].q===q.i&&!UP[k].err}).length;
+  if(ups(q).length+busy>maxN(q)){UP[key].err=q.t==="upload"?"That's the limit of "+maxN(q)+". Remove one first, or share a folder link.":"That's a lot of files. Share a folder link instead.";paintFiles(q);return}
   try{var data=b64(await file.arrayBuffer());var ok=false,res=null;
     for(var t=0;t<3&&!ok;t++){try{var r=await fetch(B.u,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({type:"upload",id:B.id,k:B.k,client:B.c||"",project:B.p||"",name:file.name,mime:file.type||"application/octet-stream",data:data})});res=await r.json().catch(function(){return null});ok=!!(res&&res.ok&&res.url)}catch(e){}if(!ok)await new Promise(function(z){setTimeout(z,1200*(t+1))})}
-    if(!ok){UP[key].err=(res&&res.error)?"Couldn't upload: "+res.error:"Couldn't upload. Try again or share a link.";paintFiles();return}
-    delete UP[key];A.x_files__up=(A.x_files__up||[]).concat([{n:file.name,u:res.url}]);save();paintFiles();
-  }catch(e){UP[key].err="Couldn't read that file.";paintFiles()}
+    if(!ok){UP[key].err=(res&&res.error)?"Couldn't upload: "+res.error:"Couldn't upload. Try again or share a link.";paintFiles(q);return}
+    delete UP[key];A[q.i+"__up"]=ups(q).concat([{n:file.name,u:res.url}]);save();paintFiles(q);
+  }catch(e){UP[key].err="Couldn't read that file.";paintFiles(q)}
 }
-function plain(){return B.q.map(function(q){var v=A[q.i],t="";if(q.t==="checks"){t=(Array.isArray(v)?v:[]).map(function(j){return (q.o||[])[j]}).filter(Boolean).join(", ");if(A[q.i+"_other"]&&String(A[q.i+"_other"]).trim())t+=(t?" — ":"")+"Other: "+String(A[q.i+"_other"]).trim()}
-    else if(q.i==="x_files"){var ups=(A.x_files__up||[]).map(function(f){return "• "+f.n+": "+f.u}).join("\n");t=[String(v||"").trim(),ups?"Uploaded files:\n"+ups:""].filter(Boolean).join("\n\n")}else if(q.t==="scales")t=(q.r||[]).map(function(r,ri){var x=(Array.isArray(v)?v:[])[ri];return x?r[0]+" ↔ "+r[1]+": "+x+"/5":""}).filter(Boolean).join("; ");else t=v||"";return q.l+"\n"+(t||"(blank)")}).join("\n\n")}
+function plain(){return QS().map(function(q){var v=A[q.i],t="";if(q.t==="checks"){t=(Array.isArray(v)?v:[]).map(function(j){return (q.o||[])[j]}).filter(Boolean).join(", ");if(A[q.i+"_other"]&&String(A[q.i+"_other"]).trim())t+=(t?" — ":"")+"Other: "+String(A[q.i+"_other"]).trim()}
+    else if(isUp(q)){var ul=ups(q).map(function(f){return "• "+f.n+": "+f.u}).join("\n");t=[String(v||"").trim(),ul?"Uploaded files:\n"+ul:""].filter(Boolean).join("\n\n")}else if(q.t==="scales")t=(q.r||[]).map(function(r,ri){var x=(Array.isArray(v)?v:[])[ri];return x?r[0]+" ↔ "+r[1]+": "+x+"/5":""}).filter(Boolean).join("; ");else t=v||"";return q.l+"\n"+(t||"(blank)")}).join("\n\n")}
 function render(){
   var st=load()||{};A=st.a||{};
   var nm=first(B.c),done=!!st.sent;
   app.innerHTML=top()+
    '<div class="fade"><h1>'+(nm?"Hi "+esc(nm)+".":"Hi there.")+'</h1><p class="lede">'+esc(B.n||"Thanks for working with me. These questions help me understand your project before I start designing. Answer what you can. Nothing here is a test, and short answers are completely fine.")+'</p>'+
-   '<div class="proj"><span class="pill">'+B.q.length+' questions</span><span class="pill">About '+Math.max(3,Math.round(B.q.length*0.8))+' minutes</span><span class="pill">Saves as you go</span></div></div>'+
+   '<div class="proj"><span class="pill">'+QS().length+' questions</span><span class="pill">About '+Math.max(3,Math.round(QS().length*0.8))+' minutes</span><span class="pill">Saves as you go</span></div></div>'+
    (done?'<div class="err" style="background:color-mix(in srgb,var(--good) 12%,var(--card))"><b>You already sent this brief. Thank you!</b>You can change anything below and send it again. Connor will get the updated answers.</div>':"")+
    '<div class="bar"><div class="track" aria-hidden="true"><i></i></div><span class="count" id="cnt"></span><span class="saved" id="svd" hidden><i></i>Saved</span></div>'+
-   (B.m?'<section class="card mood fade"><div><span class="qn">Moodboard</span><span class="ql">Add some inspiration</span><p class="hint" style="margin:0">Pin images, colors and anything that feels right.</p></div><a class="btn ghost" href="'+esc(B.m)+'" target="_blank" rel="noopener">Open moodboard</a></section>':"")+
-   B.q.map(field).join("")+
+   (okUrl(B.m)&&!B.q.some(function(q){return q.t==="mood"})?'<section class="card mood fade"><div><span class="qn">Moodboard</span><span class="ql">Add some inspiration</span><p class="hint" style="margin:0">Pin images, colors and anything that feels right.</p></div><a class="btn ghost" href="'+esc(okUrl(B.m))+'" target="_blank" rel="noopener">Open moodboard</a></section>':"")+
+   (function(){var n=0;return B.q.map(function(q){return field(q,q.t==="mood"?n:n++)}).join("")})()+
    '<div class="send"><button class="btn" id="send" type="button">Send to Connor</button><p id="sendnote">Your answers go straight to Connor. You can come back and update them anytime with this same link.</p><div id="sendmsg"></div></div>'+
    '<div class="foot"><span>Connor Olson Design · Spokane, WA</span>'+(B.e?'<a href="mailto:'+esc(B.e)+'">'+esc(B.e)+'</a>':"")+'</div>';
   progress();wireDrop();
 }
-function wireDrop(){var d=document.getElementById("drop"),p=document.getElementById("filepick");if(!d||!p)return;
-  p.onchange=function(){[].slice.call(p.files||[]).forEach(upload);p.value=""};
+function wireDrop(){[].slice.call(document.querySelectorAll("[data-drop]")).forEach(function(d){
+  var q=B.q.find(function(x){return x.i===d.dataset.drop}),p=d.querySelector("input[type=file]");if(!q||!p)return;
+  var go=function(fs){[].slice.call(fs||[]).forEach(function(f){upload(f,q)})};
+  p.onchange=function(){go(p.files);p.value=""};
   ["dragenter","dragover"].forEach(function(ev){d.addEventListener(ev,function(e){e.preventDefault();d.classList.add("over")})});
   ["dragleave","drop"].forEach(function(ev){d.addEventListener(ev,function(e){e.preventDefault();d.classList.remove("over")})});
-  d.addEventListener("drop",function(e){[].slice.call((e.dataTransfer&&e.dataTransfer.files)||[]).forEach(upload)});
-}
+  d.addEventListener("drop",function(e){go(e.dataTransfer&&e.dataTransfer.files)});
+})}
 function thanks(){
   var nm=first(B.c);window.scrollTo({top:0,behavior:"smooth"});
   app.innerHTML=top()+'<div class="screen fade"><span class="eyebrow">Brief received</span><h1>Thank you'+(nm?", "+esc(nm):"")+'!</h1><p class="lede">Connor has your answers and will be in touch soon about next steps. If you think of anything else, open this same link again to update your brief.</p><div class="row"><button class="btn ghost" id="again" type="button">Review my answers</button></div></div>';
 }
 async function send(){
   if(sending)return;var btn=document.getElementById("send"),msg=document.getElementById("sendmsg");
-  var n=B.q.filter(answered).length;
+  var n=QS().filter(answered).length;
   if(n===0){msg.innerHTML='<div class="err"><b>Nothing to send yet</b>Answer at least one question, then send.</div>';return}
   sending=true;btn.disabled=true;btn.innerHTML='<span class="spin"></span>Sending';msg.innerHTML="";
   if(Object.keys(UP).some(function(k){return !UP[k].err})){msg.innerHTML='<div class="err"><b>One moment</b>Your files are still uploading. Send again when they finish.</div>';sending=false;btn.disabled=false;btn.textContent="Send to Connor";return}
-  var out={};Object.keys(A).forEach(function(k){if(k!=="x_files__up")out[k]=A[k]});
-  var fx=B.q.find(function(x){return x.i==="x_files"});if(fx){var ups=(A.x_files__up||[]).map(function(f){return "• "+f.n+": "+f.u}).join("\n");if(ups)out.x_files=[String(A.x_files||"").trim(),"Uploaded files:\n"+ups].filter(Boolean).join("\n\n")}
+  var out={};Object.keys(A).forEach(function(k){if(!/__up$/.test(k))out[k]=A[k]});
+  B.q.forEach(function(q){if(!isUp(q))return;var ul=ups(q),typed=String(A[q.i]||"").trim();if(!ul.length)return;
+    if(q.i==="x_files")out.x_files=[typed,"Uploaded files:\n"+ul.map(function(f){return "• "+f.n+": "+f.u}).join("\n")].filter(Boolean).join("\n\n");
+    else out[q.i]=ul.map(function(f){return {name:f.n,url:f.u}}).concat(typed?[typed]:[])});
   var payload={v:1,id:B.id,k:B.k,client:B.c||"",project:B.p||"",answers:out,text:plain(),sentAt:new Date().toISOString()};
   var ok=false,last="";
   for(tries=0;tries<3&&!ok;tries++){
@@ -208,8 +223,8 @@ document.addEventListener("change",function(e){var t=e.target;if(!B||!t.dataset|
   if(t.type==="checkbox"){var i=t.dataset.i,j=Number(t.dataset.j),cur=Array.isArray(A[i])?A[i].slice():[];var p=cur.indexOf(j);if(t.checked&&p<0)cur.push(j);if(!t.checked&&p>=0)cur.splice(p,1);cur.sort(function(a,b){return a-b});A[i]=cur;var q0=B.q.find(function(x){return x.i===i});if(q0&&otherIdx(q0)===j){var box=t.closest("section").querySelector(".other");if(box){box.hidden=!t.checked;if(t.checked){var inp=box.querySelector("input");setTimeout(function(){inp&&inp.focus()},50)}}}}
   else A[t.dataset.i]=t.value;save();progress()});
 document.addEventListener("click",function(e){var t=e.target.closest&&e.target.closest("button");if(!t||!B)return;
-  if(t.dataset&&t.dataset.rmf!=null){var arr=(A.x_files__up||[]).slice();arr.splice(Number(t.dataset.rmf),1);A.x_files__up=arr;save();paintFiles();return}
-  if(t.dataset&&t.dataset.rmu!=null){delete UP[t.dataset.rmu];paintFiles();return}
+  if(t.dataset&&t.dataset.rmf!=null){var fq=B.q.find(function(x){return x.i===t.dataset.q});if(fq){var arr=ups(fq).slice();arr.splice(Number(t.dataset.rmf),1);A[fq.i+"__up"]=arr;save();paintFiles(fq)}return}
+  if(t.dataset&&t.dataset.rmu!=null){var uu=UP[t.dataset.rmu],uq=uu&&B.q.find(function(x){return x.i===uu.q});delete UP[t.dataset.rmu];if(uq)paintFiles(uq);return}
   if(t.id==="send"){send();return}
   if(t.id==="again"){render();return}
   if(t.dataset&&t.dataset.r!=null){var i=t.dataset.i,ri=Number(t.dataset.r),v=Number(t.dataset.v),cur=Array.isArray(A[i])?A[i].slice():[];cur[ri]=cur[ri]===v?0:v;A[i]=cur;
